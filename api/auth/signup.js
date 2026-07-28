@@ -37,7 +37,14 @@ module.exports = async (req, res) => {
       email, name, password_hash: hashedPassword
     }).select().single();
 
-    if (error || !user) return res.status(400).json({ error: error?.message || 'Erro ao criar usuário' });
+    if (error || !user) {
+      return res.status(400).json({
+        error: error?.message || 'Erro ao criar usuário',
+        detalhe: error?.details || null,
+        hint: error?.hint || null,
+        codigo: error?.code || null
+      });
+    }
 
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '30d' });
     res.status(201).json({
