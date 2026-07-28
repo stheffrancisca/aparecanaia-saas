@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Lock, Zap, TrendingUp, Users, BarChart3, Code, Settings } from 'lucide-react';
+import { LogOut, Lock, Zap, TrendingUp, Users, BarChart3, Code } from 'lucide-react';
 import '../styles/Dashboard.css';
 
 // Feature access by plan
