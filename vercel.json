@@ -1,19 +1,5 @@
 {
-  "version": 2,
-  "buildCommand": "echo 'Build skipped'",
-  "outputDirectory": ".",
-  "rewrites": [
-    { "source": "/api/auth/signup", "destination": "/api/signup.js" },
-    { "source": "/api/auth/login", "destination": "/api/login.js" },
-    { "source": "/api/auth/me", "destination": "/api/me.js" },
-    { "source": "/api/payment/create-subscription", "destination": "/api/create-subscription.js" },
-    { "source": "/api/payment/upgrade-plan", "destination": "/api/upgrade-plan.js" },
-    { "source": "/api/payment/subscription", "destination": "/api/subscription.js" }
-  ],
-  "env": {
-    "SUPABASE_URL": "@supabase_url",
-    "SUPABASE_ANON_KEY": "@supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
-    "JWT_SECRET": "@jwt_secret"
-  }
+  "framework": null,
+  "buildCommand": "echo 'no build needed'",
+  "outputDirectory": "public"
 }
