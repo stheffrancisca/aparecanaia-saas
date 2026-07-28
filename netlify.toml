@@ -3,6 +3,7 @@
   publish = "build"
 
 [build.environment]
+  CI = "false"
   REACT_APP_API_URL = "https://apareca-backend.vercel.app"
   REACT_APP_JWT_SECRET = "sua-chave-secreta-super-segura"
 
