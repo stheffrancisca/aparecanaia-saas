@@ -1,12 +1,11 @@
-require('dotenv').config({ path: './.env.local' });
+require('dotenv').config({ path: '.env.local' });
 
 const express = require('express');
 const cors = require('cors');
 const authApi = require('./api/auth');
-const paymentApi = require('./api/payment');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors({
   origin: '*',
@@ -15,15 +14,18 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Auth
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
 app.post('/api/auth/signup', authApi.signup);
 app.post('/api/auth/login', authApi.login);
 app.get('/api/auth/me', authApi.me);
 
-// Payment
-app.post('/api/payment/create-subscription', paymentApi.createSubscription);
-app.post('/api/payment/upgrade-plan', paymentApi.upgradePlan);
-app.get('/api/payment/subscription', paymentApi.getSubscription);
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ error: err.message });
+});
 
 app.listen(PORT, () => {
   console.log(`✅ Backend rodando em http://localhost:${PORT}`);
