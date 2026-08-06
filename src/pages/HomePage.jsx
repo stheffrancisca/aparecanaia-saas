@@ -65,6 +65,7 @@ export default function HomePage() {
               <a href="#precos">Preços</a>
               <a href="#faq">FAQ</a>
               <a href="#sobre">Sobre</a>
+              <a href="#contato">Contato</a>
             </nav>
             <Link to="/login" className="btn-primary">Entrar</Link>
           </div>
@@ -369,7 +370,7 @@ export default function HomePage() {
 
               <div className="price-payback">Payback: 30 dias | ROI: 200x+</div>
 
-              <a href="#contato" className="price-cta secondary">Solicitar Demo</a>
+              <Link to="#contato" className="price-cta secondary" onClick={(e) => { e.preventDefault(); document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' }); }}>Solicitar Demo</Link>
             </div>
           </div>
 
@@ -437,32 +438,126 @@ export default function HomePage() {
               <h3>Nosso Time</h3>
 
               <div className="team-member">
-                <div className="member-name">👨‍💼 [Fundador/CEO]</div>
-                <div className="member-role">Ex-Growth Manager em [Startup]</div>
+                <div className="member-name">👩‍💼 Sthefani Francisca</div>
+                <div className="member-role">Fundadora · Analista de FP&A · Especialista em IA</div>
+                <p style={{ fontSize: '13px', color: '#666', marginTop: '10px', lineHeight: '1.6' }}>
+                  Especialista em planejamento financeiro, análise de rentabilidade e business intelligence. Combina expertise em Excel avançado, SQL, Power BI, Python e IA para transformar dados em decisões estratégicas. Com experiência em previsão financeira e automação de processos em startups e grandes empresas.
+                </p>
                 <div className="member-links">
-                  <a href="#">LinkedIn</a>
-                  <a href="#">Twitter</a>
-                </div>
-              </div>
-
-              <div className="team-member">
-                <div className="member-name">👨‍💻 [CTO/Desenvolvedor]</div>
-                <div className="member-role">Ex-Dev em [Tech Company]</div>
-                <div className="member-links">
-                  <a href="#">GitHub</a>
-                  <a href="#">LinkedIn</a>
-                </div>
-              </div>
-
-              <div className="team-member">
-                <div className="member-name">📊 [Operações/Marketing]</div>
-                <div className="member-role">Ex-Marketing Manager em [Company]</div>
-                <div className="member-links">
-                  <a href="#">LinkedIn</a>
+                  <a href="https://www.linkedin.com/in/sthefani-francisca/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* CONTATO - NOVO */}
+      <section className="contact" id="contato">
+        <div className="container">
+          <h2>Quer Conversar Sobre GEO?</h2>
+          <p style={{ fontSize: '16px', color: '#666', marginTop: '10px', marginBottom: '30px' }}>
+            Dúvidas, sugestões ou quer uma demo personalizada? Envie uma mensagem para a gente.
+          </p>
+
+          <form style={{ maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#1a1a1a' }}>
+                Seu Nome *
+              </label>
+              <input
+                type="text"
+                placeholder="Ex: João Silva"
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#1a1a1a' }}>
+                Seu E-mail *
+              </label>
+              <input
+                type="email"
+                placeholder="seu@email.com"
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#1a1a1a' }}>
+                Empresa/Nicho
+              </label>
+              <input
+                type="text"
+                placeholder="Ex: Consultoria de RH"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#1a1a1a' }}>
+                Mensagem *
+              </label>
+              <textarea
+                placeholder="Como podemos ajudar?"
+                required
+                rows="5"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  resize: 'vertical',
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: '#dc2626',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Enviar Mensagem
+            </button>
+
+            <p style={{ fontSize: '12px', color: '#999', marginTop: '15px', textAlign: 'center' }}>
+              Responderemos em até 24 horas · aparecanaia@gmail.com
+            </p>
+          </form>
         </div>
       </section>
 
