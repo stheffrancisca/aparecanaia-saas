@@ -17,8 +17,8 @@ function App() {
       const token = localStorage.getItem('authToken');
       if (token) {
         try {
-          const userRes = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/me`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+          const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+            const userRes = await fetch(`${API_URL}/api/auth/me`, {
           });
           if (userRes.ok) {
             const userData = await userRes.json();
