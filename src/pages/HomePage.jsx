@@ -2,21 +2,18 @@ import { SearchResultsModal } from './components/SearchResultsModal';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/HomePage.css';
-
+import '../styles/SearchResultsModal.css';
 export default function HomePage() {
   const [expandedFaq, setExpandedFaq] = useState(null);
-
   // ESTADOS PARA BUSCA E RESULTADOS
   const [showResults, setShowResults] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
   const [domain, setDomain] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-
   // FUNÇÃO DE BUSCA
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!domain.trim()) return;
-
     setIsSearching(true);
     try {
       const res = await fetch('/api/geo-score', {
@@ -35,7 +32,6 @@ export default function HomePage() {
       setIsSearching(false);
     }
   };
-
   const faqItems = [
     {
       id: 1,
@@ -83,7 +79,6 @@ export default function HomePage() {
       answer: 'Não. Seus dados são 100% privados. Cada análise é acessível apenas por você. Nunca compartilhamos com terceiros. Veja nossa política de privacidade completa.'
     }
   ];
-
   return (
     <div className="homepage">
       {/* HEADER */}
@@ -102,7 +97,6 @@ export default function HomePage() {
           </div>
         </div>
       </header>
-
       {/* HERO - COM FORMULÁRIO DE BUSCA */}
       <section className="hero">
         <div className="container">
@@ -138,7 +132,6 @@ export default function HomePage() {
             Toda semana, clientes seus fazem essa pergunta.<br />
             <strong>Quantos você está perdendo?</strong>
           </p>
-
           {/* FORMULÁRIO DE BUSCA */}
           <form onSubmit={handleSearch} className="search-form" style={{ marginBottom: '30px' }}>
             <input
@@ -182,7 +175,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* SOCIAL PROOF */}
       <section className="social-proof">
         <div className="container">
@@ -225,7 +217,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* CASE STUDY */}
       <section className="case-study" id="caso">
         <div className="container">
@@ -328,7 +319,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* PRICING */}
       <section className="pricing" id="precos">
         <div className="container">
@@ -421,7 +411,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* FAQ */}
       <section className="faq" id="faq">
         <div className="container">
@@ -444,7 +433,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* SOBRE */}
       <section className="about" id="sobre">
         <div className="container">
@@ -481,7 +469,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* CONTATO */}
       <section className="contact" id="contato">
         <div className="container">
@@ -588,14 +575,12 @@ export default function HomePage() {
           </form>
         </div>
       </section>
-
       {/* MODAL DE RESULTADOS - COMPONENTE IMPORTADO */}
       <SearchResultsModal
         showResults={showResults}
         searchResults={searchResults}
         setShowResults={setShowResults}
       />
-
       {/* FOOTER */}
       <footer className="footer">
         <div className="container">
