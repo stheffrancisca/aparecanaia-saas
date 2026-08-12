@@ -1,9 +1,40 @@
+import { SearchResultsModal } from './components/SearchResultsModal';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/HomePage.css';
 
 export default function HomePage() {
   const [expandedFaq, setExpandedFaq] = useState(null);
+
+  // ESTADOS PARA BUSCA E RESULTADOS
+  const [showResults, setShowResults] = useState(false);
+  const [searchResults, setSearchResults] = useState(null);
+  const [domain, setDomain] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
+  // FUNÇÃO DE BUSCA
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!domain.trim()) return;
+
+    setIsSearching(true);
+    try {
+      const res = await fetch('/api/geo-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domain: domain.trim() })
+      });
+      const data = await res.json();
+      setSearchResults(data);
+      setShowResults(true);
+      setDomain('');
+    } catch (error) {
+      console.error('Erro na busca:', error);
+      alert('Erro ao buscar. Tente novamente.');
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const faqItems = [
     {
@@ -72,7 +103,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* HERO - CORRIGIDO */}
+      {/* HERO - COM FORMULÁRIO DE BUSCA */}
       <section className="hero">
         <div className="container">
           <h1>Seus Clientes Já Mudaram.<br />Você Percebeu?</h1>
@@ -80,7 +111,6 @@ export default function HomePage() {
             67% das buscas pelo seu setor já acontecem direto no ChatGPT, Gemini e Claude.<br />
             Você está na resposta ou é invisível?
           </p>
-
           <div className="hero-example">
             <h3>Imagine essa situação:</h3>
             <div className="step">
@@ -104,24 +134,56 @@ export default function HomePage() {
               <div className="step-text"><strong>Resultado:</strong> Seu cliente virou cliente deles. Você nunca soube por quê.</div>
             </div>
           </div>
-
           <p className="subtitle" style={{ marginTop: '30px' }}>
             Toda semana, clientes seus fazem essa pergunta.<br />
             <strong>Quantos você está perdendo?</strong>
           </p>
 
-          <div className="cta-container">
-            <Link to="/login" className="btn-primary main-cta">DESCOBRIR MEU GEO SCORE</Link>
-            <p className="sub-text">Resultado em 30 segundos · Sem cadastro · Sem cartão de crédito</p>
-            <div className="secondary-links">
-              ou <a href="#precos">conhecer os planos</a> ·
-              <a href="#sobre">quem somos</a>
-            </div>
+          {/* FORMULÁRIO DE BUSCA */}
+          <form onSubmit={handleSearch} className="search-form" style={{ marginBottom: '30px' }}>
+            <input
+              type="text"
+              value={domain}
+              onChange={(e) => setDomain(e.target.value)}
+              placeholder="Digite seu domínio (ex: meusite.com.br)"
+              disabled={isSearching}
+              required
+              style={{
+                width: '100%',
+                padding: '14px',
+                border: '2px solid #e5e7eb',
+                borderRadius: '8px 0 0 8px',
+                fontSize: '14px',
+                fontFamily: 'inherit',
+                boxSizing: 'border-box'
+              }}
+            />
+            <button
+              type="submit"
+              disabled={isSearching}
+              style={{
+                padding: '14px 30px',
+                background: isSearching ? '#dc2626cc' : '#dc2626',
+                color: 'white',
+                border: 'none',
+                borderRadius: '0 8px 8px 0',
+                fontWeight: '600',
+                cursor: isSearching ? 'not-allowed' : 'pointer',
+                fontSize: '14px'
+              }}
+            >
+              {isSearching ? 'Analisando...' : 'DESCOBRIR MEU GEO SCORE'}
+            </button>
+          </form>
+          <p className="sub-text">Resultado em 30 segundos · Sem cadastro · Sem cartão de crédito</p>
+          <div className="secondary-links">
+            ou <a href="#precos">conhecer os planos</a> ·
+            <a href="#sobre">quem somos</a>
           </div>
         </div>
       </section>
 
-      {/* SOCIAL PROOF - NOVO */}
+      {/* SOCIAL PROOF */}
       <section className="social-proof">
         <div className="container">
           <div className="proof-header">
@@ -141,7 +203,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-
           <div className="testimonials">
             <div className="testimonial">
               <div className="testimonial-stars">⭐⭐⭐⭐⭐</div>
@@ -149,14 +210,12 @@ export default function HomePage() {
               <div className="testimonial-author">Mariana S.</div>
               <div className="testimonial-role">CEO, E-commerce de Artesanato (São Paulo)</div>
             </div>
-
             <div className="testimonial">
               <div className="testimonial-stars">⭐⭐⭐⭐⭐</div>
               <div className="testimonial-text">"Ofereci como novo serviço pros meus clientes. Cada um pagando R$397/mês. Fácil R$10k de receita nova."</div>
               <div className="testimonial-author">Fernando T.</div>
               <div className="testimonial-role">Diretor, Agência Digital (Belo Horizonte)</div>
             </div>
-
             <div className="testimonial">
               <div className="testimonial-stars">⭐⭐⭐⭐⭐</div>
               <div className="testimonial-text">"Pensava que era mais complicado. O checklist do Apareça na IA foi tão claro que eu mesmo implementei em 2 semanas."</div>
@@ -167,11 +226,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CASE STUDY - NOVO */}
+      {/* CASE STUDY */}
       <section className="case-study" id="caso">
         <div className="container">
           <h2>De Invisível a #2 em 60 Dias</h2>
-
           <div className="case-study-grid">
             <div>
               <div className="case-column">
@@ -180,7 +238,6 @@ export default function HomePage() {
                   <strong>Consultoria de RH — São Paulo</strong><br />
                   Problema: Perdia licitações porque concorrência aparecia no ChatGPT. Ela não.
                 </p>
-
                 <h3 style={{ marginTop: '20px' }}>❌ ANTES (Dia 1)</h3>
                 <div className="case-metric">
                   <span className="case-metric-label">GEO Score</span>
@@ -208,7 +265,6 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-
             <div>
               <div className="case-column">
                 <h3>🔧 SOLUÇÃO IMPLEMENTADA</h3>
@@ -233,7 +289,6 @@ export default function HomePage() {
                 <p style={{ fontSize: '12px', color: '#999', marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #e5e7eb' }}>
                   <strong>Tempo:</strong> 3 semanas | <strong>Custo:</strong> R$254 (Starter)
                 </p>
-
                 <h3 style={{ marginTop: '25px' }}>✅ DEPOIS (Dia 60)</h3>
                 <div className="case-metric">
                   <span className="case-metric-label">GEO Score</span>
@@ -263,7 +318,6 @@ export default function HomePage() {
                   <span className="case-metric-label">ROI</span>
                   <span className="case-metric-value">141x 🚀</span>
                 </div>
-
                 <div className="case-quote">
                   <div className="case-quote-text">"R$254 de investimento virando R$36k/mês é praticamente magia. Já contratei o plano Pro pra otimizar os outros 4 clientes também."</div>
                   <div className="case-quote-author">Diretora de Marketing</div>
@@ -275,29 +329,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PRICING - MELHORADO */}
+      {/* PRICING */}
       <section className="pricing" id="precos">
         <div className="container">
           <h2>Escolha o Plano Ideal para Seu Tipo de Negócio</h2>
-
           <div className="pricing-grid">
             <div className="price-card">
               <div className="price-name">STARTER</div>
               <div className="price-amount">R$127</div>
               <div className="price-period">/mês (sem fidelidade)</div>
-
               <div className="price-for">✓ Ideal para:</div>
               <div className="price-examples">
                 • Freelancer<br />
                 • Pequena empresa<br />
                 • Começar a testar GEO
               </div>
-
               <div className="price-result">
                 <div className="price-result-title">Resultado esperado:</div>
                 <div className="price-result-text">Ganhar 3-5 clientes por mês (+R$3k)</div>
               </div>
-
               <ul className="price-features">
                 <li>1 site monitorado</li>
                 <li>GEO Score completo</li>
@@ -305,30 +355,24 @@ export default function HomePage() {
                 <li>30 dias de histórico</li>
                 <li>Export CSV</li>
               </ul>
-
               <div className="price-payback">Payback: 30 dias | ROI: 12x</div>
-
               <Link to="/signup" className="price-cta primary">Começar Grátis</Link>
             </div>
-
             <div className="price-card popular">
               <div className="price-badge">⭐ MAIS POPULAR</div>
               <div className="price-name">PRO</div>
               <div className="price-amount">R$397</div>
               <div className="price-period">/mês (sem fidelidade)</div>
-
               <div className="price-for">✓ Ideal para:</div>
               <div className="price-examples">
                 • Agência digital<br />
                 • Startup B2B<br />
                 • Consultoria
               </div>
-
               <div className="price-result">
                 <div className="price-result-title">Resultado esperado:</div>
                 <div className="price-result-text">Ganhar 15-30 clientes/mês (+R$20k)</div>
               </div>
-
               <ul className="price-features">
                 <li>Tudo do Starter</li>
                 <li>Até 5 sites</li>
@@ -336,29 +380,23 @@ export default function HomePage() {
                 <li>90 dias de histórico</li>
                 <li>Suporte prioritário</li>
               </ul>
-
               <div className="price-payback">Payback: 30 dias | ROI: 50-100x</div>
-
               <Link to="/signup" className="price-cta primary">Começar Grátis</Link>
             </div>
-
             <div className="price-card">
               <div className="price-name">AGÊNCIA</div>
               <div className="price-amount">R$997</div>
               <div className="price-period">/mês (sem fidelidade)</div>
-
               <div className="price-for">✓ Ideal para:</div>
               <div className="price-examples">
                 • Agência grande<br />
                 • Consultoria<br />
                 • 30+ clientes
               </div>
-
               <div className="price-result">
                 <div className="price-result-title">Resultado esperado:</div>
                 <div className="price-result-text">Gerar R$200k+/mês em projetos novos</div>
               </div>
-
               <ul className="price-features">
                 <li>Tudo do Pro</li>
                 <li>Até 25 sites</li>
@@ -367,20 +405,16 @@ export default function HomePage() {
                 <li>White-label (seu logo)</li>
                 <li>Gerente dedicado</li>
               </ul>
-
               <div className="price-payback">Payback: 30 dias | ROI: 200x+</div>
-
               <Link to="#contato" className="price-cta secondary" onClick={(e) => { e.preventDefault(); document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' }); }}>Solicitar Demo</Link>
             </div>
           </div>
-
           <div className="guarantee">
             <h3>✅ GARANTIA 100%</h3>
             <p>Se você não ver <strong>melhoria no GEO Score em 30 dias</strong>,<br />devolvemos 100% da sua assinatura.</p>
             <p>Sem perguntas. Sem complicação.</p>
             <p><strong>Porque a gente só ganha quando você ganha. 🎯</strong></p>
           </div>
-
           <div style={{ textAlign: 'center', fontSize: '14px', color: '#666', marginTop: '40px' }}>
             <p><strong>Teste 14 dias grátis em qualquer plano</strong></p>
             <p>Sem cartão · Sem fidelidade · Cancele em 1 clique</p>
@@ -388,11 +422,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ - EXPANDIDA */}
+      {/* FAQ */}
       <section className="faq" id="faq">
         <div className="container">
           <h2>Perguntas Frequentes</h2>
-
           <div className="faq-list">
             {faqItems.map((item) => (
               <div key={item.id} className="faq-item">
@@ -412,11 +445,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SOBRE - NOVO */}
+      {/* SOBRE */}
       <section className="about" id="sobre">
         <div className="container">
           <h2>Quem Somos</h2>
-
           <div className="about-content">
             <p>
               <strong>Desenvolvemos o Apareça na IA porque percebemos um problema gigante que ninguém resolve.</strong>
@@ -433,10 +465,8 @@ export default function HomePage() {
             <p style={{ marginTop: '20px', padding: '20px', background: '#f0fdf4', borderLeft: '4px solid #10b981', borderRadius: '6px' }}>
               <strong>"Dar a todo negócio brasileiro a capacidade de aparecer quando seus clientes o procuram no ChatGPT, Gemini ou Claude."</strong>
             </p>
-
             <div className="about-team">
               <h3>Nosso Time</h3>
-
               <div className="team-member">
                 <div className="member-name">👩‍💼 Sthefani Francisca</div>
                 <div className="member-role">Fundadora · Analista de FP&A · Especialista em IA</div>
@@ -452,14 +482,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CONTATO - NOVO */}
+      {/* CONTATO */}
       <section className="contact" id="contato">
         <div className="container">
           <h2>Quer Conversar Sobre GEO?</h2>
           <p style={{ fontSize: '16px', color: '#666', marginTop: '10px', marginBottom: '30px' }}>
             Dúvidas, sugestões ou quer uma demo personalizada? Envie uma mensagem para a gente.
           </p>
-
           <form style={{ maxWidth: '500px', margin: '0 auto' }}>
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#1a1a1a' }}>
@@ -476,10 +505,10 @@ export default function HomePage() {
                   borderRadius: '6px',
                   fontSize: '14px',
                   fontFamily: 'inherit',
+                  boxSizing: 'border-box'
                 }}
               />
             </div>
-
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#1a1a1a' }}>
                 Seu E-mail *
@@ -495,10 +524,10 @@ export default function HomePage() {
                   borderRadius: '6px',
                   fontSize: '14px',
                   fontFamily: 'inherit',
+                  boxSizing: 'border-box'
                 }}
               />
             </div>
-
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#1a1a1a' }}>
                 Empresa/Nicho
@@ -513,10 +542,10 @@ export default function HomePage() {
                   borderRadius: '6px',
                   fontSize: '14px',
                   fontFamily: 'inherit',
+                  boxSizing: 'border-box'
                 }}
               />
             </div>
-
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#1a1a1a' }}>
                 Mensagem *
@@ -533,10 +562,10 @@ export default function HomePage() {
                   fontSize: '14px',
                   fontFamily: 'inherit',
                   resize: 'vertical',
+                  boxSizing: 'border-box'
                 }}
               />
             </div>
-
             <button
               type="submit"
               style={{
@@ -548,18 +577,24 @@ export default function HomePage() {
                 borderRadius: '6px',
                 fontWeight: '600',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '14px'
               }}
             >
               Enviar Mensagem
             </button>
-
             <p style={{ fontSize: '12px', color: '#999', marginTop: '15px', textAlign: 'center' }}>
               Responderemos em até 24 horas · aparecanaia@gmail.com
             </p>
           </form>
         </div>
       </section>
+
+      {/* MODAL DE RESULTADOS - COMPONENTE IMPORTADO */}
+      <SearchResultsModal
+        showResults={showResults}
+        searchResults={searchResults}
+        setShowResults={setShowResults}
+      />
 
       {/* FOOTER */}
       <footer className="footer">
