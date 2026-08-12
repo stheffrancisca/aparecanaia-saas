@@ -1,60 +1,96 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import '../styles/Login.css';
 
-export default function Login({ setUser, setSubscription }) {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    setIsLoading(true);
+
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-        email,
-        password
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
       });
-      localStorage.setItem('authToken', res.data.token);
-      setUser(res.data.user);
-      setSubscription(res.data.subscription);
-      navigate(res.data.subscription?.plan ? '/dashboard' : '/plans');
-    } catch (e) {
-      setError(e.response?.data?.error || 'Erro ao fazer login');
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Erro ao fazer login');
+        return;
+      }
+
+      // Salvar token no localStorage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      // Redirecionar para dashboard
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Erro ao conectar ao servidor');
+      console.error(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Apareça na IA</h1>
-        <h2>Fazer login</h2>
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {error && <div className="error">{error}</div>}
-          <button type="submit" disabled={loading}>
-            {loading ? 'Entrando...' : 'Entrar'}
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-header">
+          <h1>🚀 Apareça na IA</h1>
+          <p>Faça login na sua conta</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="seu@email.com"
+              required
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Senha</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Sua senha"
+              required
+              disabled={isLoading}
+            />
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+
+          <button
+            type="submit"
+            className="btn-login"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Entrando...' : 'ENTRAR'}
           </button>
         </form>
-        <p>Não tem conta? <Link to="/signup">Criar uma</Link></p>
+
+        <div className="login-footer">
+          <p>
+            Não tem conta? <Link to="/signup">Criar conta</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
