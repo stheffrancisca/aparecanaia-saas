@@ -4,24 +4,53 @@ import { Link } from 'react-router-dom';
 export function SearchResultsModal({ showResults, searchResults, setShowResults }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [user, setUser] = useState(null);
 
   // Verifica autenticação quando o modal abre
   useEffect(() => {
-    if (!showResults) return;
+    if (!showResults) {
+      setIsLoadingAuth(true);
+      return;
+    }
 
     setIsLoadingAuth(true);
-    fetch('/api/auth/me')
+
+    // Pegar token do localStorage
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      // Sem token = não autenticado
+      setIsAuthenticated(false);
+      setIsLoadingAuth(false);
+      return;
+    }
+
+    // Verificar token chamando /api/auth/me
+    fetch('/api/auth/me', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(r => r.json())
       .then(data => {
-        setIsAuthenticated(!!data.id);
+        if (data.id) {
+          setIsAuthenticated(true);
+          setUser(data);
+        } else {
+          setIsAuthenticated(false);
+          localStorage.removeItem('token');
+        }
       })
-      .catch(() => setIsAuthenticated(false))
+      .catch(() => {
+        setIsAuthenticated(false);
+        localStorage.removeItem('token');
+      })
       .finally(() => setIsLoadingAuth(false));
   }, [showResults]);
 
   if (!showResults) return null;
-
-  // Sem dados de resultado
   if (!searchResults) return null;
 
   // Enquanto carrega autenticação
@@ -107,6 +136,7 @@ export function SearchResultsModal({ showResults, searchResults, setShowResults 
           <div className="score-display">
             <div className="score-big">{searchResults.score || '---'}/100</div>
             <p className="domain-display">{searchResults.domain}</p>
+            <p className="user-logged-in">Logado como: <strong>{user?.name}</strong></p>
           </div>
 
           {searchResults.analysis && (
