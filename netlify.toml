@@ -1,13 +1,13 @@
 [build]
-  command = "npm ci && npm run build"
-  publish = "build"
+command = "npm ci && npm run build"
+publish = "build"
 
 [build.environment]
-  CI = "false"
-  REACT_APP_API_URL = "https://apareca-backend.vercel.app"
-  REACT_APP_JWT_SECRET = "sua-chave-secreta-super-segura"
+CI = "false"
+REACT_APP_API_URL = "https://aparecanaia-backend.vercel.app"
+REACT_APP_JWT_SECRET = "sua-chave-super-secreta"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200
